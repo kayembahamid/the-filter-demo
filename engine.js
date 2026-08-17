@@ -1,5 +1,5 @@
 /* =========================================================================
-   THE FILTER AI — engine.js
+   THE FILTER AI · engine.js
    Game logic for the Mimo-style units/steps model.
 
    Reads UNITS (and helpers) from content.js.
@@ -144,7 +144,23 @@
     el.innerHTML = html;
   }
 
-  function refreshChrome() { renderHUD(); renderUnitMap(); }
+  /* Main nav. Practice Range is a paid bonus, so the nav only appears once the
+     purchase key is in. Locked players still reach the teaser from the
+     completion and certificate screens. */
+  function renderTopNav(active) {
+    // The Range is a directory, not a lesson, so it breaks out of the 620px
+    // reading column into a wide grid. Every other render clears the class.
+    document.body.classList.toggle("range-view", active === "range");
+    var el = $("topnav");
+    if (!el) return;
+    el.hidden = !isPurchased() || FREE_ONLY;
+    var t = $("navTraining"), r = $("navRange");
+    if (!t || !r) return;
+    t.classList.toggle("on", active !== "range");
+    r.classList.toggle("on", active === "range");
+  }
+
+  function refreshChrome(active) { renderHUD(); renderUnitMap(); renderTopNav(active); }
 
   /* ---------- scoring ---------- */
   // Returns { gained, bonus }. Streak bonus of +10 every 5 correct in a row.
@@ -297,7 +313,7 @@
       : "";
     screenEl.innerHTML =
       exTopline(entry) +
-      "<p class='prompt-line'>Incoming prompt — allow it through, or block it?</p>" +
+      "<p class='prompt-line'>Incoming prompt. Allow it through, or block it?</p>" +
       "<div class='inbox'>" +
         "<div class='inbox-head'><span class='live'></span>" +
           esc(item.tag || "Incoming prompt") + " · awaiting your call</div>" +
@@ -328,8 +344,8 @@
     for (var i = 0; i < btns.length; i++) { btns[i].disabled = true; btns[i].onclick = null; }
 
     var head;
-    if (item.attack) head = blocked ? "Attack blocked" : "Breach — this attack got through";
-    else             head = blocked ? "False alarm — you blocked a real user" : "Allowed — correct";
+    if (item.attack) head = blocked ? "Attack blocked" : "Breach, this attack got through";
+    else             head = blocked ? "False alarm, you blocked a real user" : "Allowed, correct";
 
     var chip = item.attack
       ? "<span class='chip tech'>" + esc(item.tech) + "</span>"
@@ -383,7 +399,7 @@
     }
 
     var res = applyResult(correct, item.xp || 25);
-    var head = correct ? "Found it" : "Not quite — the highlighted line was the attack";
+    var head = correct ? "Found it" : "Not quite. The highlighted line was the attack";
 
     screenEl.insertAdjacentHTML("beforeend",
       "<div class='fb " + (correct ? "right" : "wrong") + "'>" +
@@ -450,7 +466,7 @@
       if (cBtn) cBtn.classList.add("correct");
       finishTech(entry, false, 0);
     } else {
-      $("retryNote").textContent = "Not quite — one more try. No penalty.";
+      $("retryNote").textContent = "Not quite. One more try, no penalty.";
       $("submitTech").disabled = true;
       st.selected = null;
     }
@@ -464,7 +480,7 @@
 
     if (correct) state.caughtAttacks++;   // correctly identified a vulnerability
     var res = applyResult(correct, xp);
-    var head = correct ? "Correct" : "Revealed — " + item.correct;
+    var head = correct ? "Correct" : "Revealed: " + item.correct;
 
     screenEl.insertAdjacentHTML("beforeend",
       "<div class='fb " + (correct ? "right" : "wrong") + "'>" +
@@ -514,9 +530,9 @@
         "<p class='tagline'>You are the guardrail · OWASP LLM Top 10 for Applications 2025</p>" +
         "<p class='lede'>You sit in the seat of an AI guardrail. Your job: let real users through, and catch the attacks before they reach the model.</p>" +
         "<ul class='howto'>" +
-          "<li><span class='ic'>1</span><div>Every prompt could be legitimate — or a <b>prompt injection</b>, a jailbreak, an encoded payload, or an instruction hidden inside a document.</div></li>" +
+          "<li><span class='ic'>1</span><div>Every prompt could be legitimate, or a <b>prompt injection</b>, a jailbreak, an encoded payload, or an instruction hidden inside a document.</div></li>" +
           "<li><span class='ic'>2</span><div>You score on two numbers: <b>threats caught</b> AND <b>false alarms</b>. A filter that blocks everything is as useless as one that blocks nothing.</div></li>" +
-          "<li><span class='ic'>3</span><div>Short lessons, then drills — <b>Allow / Block</b>, <b>Tap the injection</b>, <b>Name the technique</b>. Earn XP, build streaks, finish with a certificate.</div></li>" +
+          "<li><span class='ic'>3</span><div>Short lessons, then drills. <b>Allow / Block</b>, <b>Tap the injection</b>, <b>Name the technique</b>. Earn XP, build streaks, finish with a certificate.</div></li>" +
         "</ul>" +
         "<button class='btn full' id='start'>" + (hasProgress ? "Resume training" : "Start Training") + "</button>" +
         (hasProgress ? "<button class='btn ghost full' id='restart'>Restart from the beginning</button>" : "") +
@@ -558,10 +574,10 @@
         "<span class='gate-badge'>Free training complete</span>" +
         "<h2>You finished Unit 1: " + esc(freeUnit.title) + ".</h2>" +
         "<p>You've seen direct injection, narrative jailbreaks, indirect injection hidden in content, and the precision-versus-recall tension every real filter lives with.</p>" +
-        "<p>Units 2–" + N_UNITS + " cover evasion techniques, system prompt leakage, excessive agency, RAG and vector poisoning, output handling and supply chain, and a boss unit of combined attacks — all mapped to the OWASP LLM Top 10 for Applications 2025.</p>" +
+        "<p>Units 2 to " + N_UNITS + " cover evasion techniques, system prompt leakage, excessive agency, RAG and vector poisoning, output handling and supply chain, and a boss unit of combined attacks, all mapped to the OWASP LLM Top 10 for Applications 2025.</p>" +
         "<div class='covers'>" + covers + "</div>" +
         "<div class='btn-stack'>" +
-          "<button class='btn full' id='buy'>Get full access — $12 on Gumroad</button>" +
+          "<button class='btn full' id='buy'>Get full access for $39.90 on Gumroad</button>" +
         "</div>" +
         keyRow +
         "<button class='btn ghost full' id='freeCert'>See your Free Defender certificate →</button>" +
@@ -582,7 +598,7 @@
     var msg = $("keyMsg");
     if (tryUnlock(val)) {
       msg.className = "key-msg ok";
-      msg.textContent = "Unlocked — all units are open. Loading the next lesson…";
+      msg.textContent = "Unlocked. All units are open, loading the next lesson…";
       refreshChrome();
       window.setTimeout(renderCurrent, 450);
     } else {
@@ -598,7 +614,7 @@
     var cls, label, note;
     if (state.breaches === 0 && state.falseAlarms <= 1) {
       cls = "good"; label = "Production-ready filter";
-      note = "You caught the attacks without slamming the door on real users. That balance — high recall without wrecking precision — is the whole job of a real guardrail.";
+      note = "You caught the attacks without slamming the door on real users. That balance, high recall without wrecking precision, is the whole job of a real guardrail.";
     } else if (pct >= 70) {
       cls = "mid"; label = "Solid, with gaps";
       note = "A decent instinct, but each breach is an attacker who got through and each false alarm is a real user you turned away. Real filters are judged on both at once.";
@@ -615,9 +631,11 @@
         statGrid() +
         "<p>" + note + "</p>" +
         "<button class='btn full' id='cert'>Get your certificate →</button>" +
+        "<button class='btn ghost full' id='range'>You can spot them. Now go break real ones →</button>" +
         "<button class='btn ghost full' id='again'>Play again</button>" +
       "</div>";
     $("cert").onclick = function () { showCertificate(isPurchased() ? "full" : "free"); };
+    $("range").onclick = function () { showRange(renderComplete); };
     $("again").onclick = function () { resetProgress(); showIntro(); };
   }
 
@@ -627,6 +645,239 @@
       "<div class='stat-cell false'><div class='v'>" + state.falseAlarms + "</div><div class='k'>False alarms</div></div>" +
       "<div class='stat-cell breach'><div class='v'>" + state.breaches + "</div><div class='k'>Breaches</div></div>" +
     "</div>";
+  }
+
+  /* ---------- practice range (paid bonus) ----------
+     A curated directory of free and self-hostable labs, tools and bounties,
+     ordered as a route rather than a list. Data lives in range.js, which only
+     ships in the full build, so everything here guards on it being present. */
+  var HAS_RANGE = (typeof RANGE !== "undefined") && RANGE && RANGE.sections;
+  var rangeReturn = null;                 // where the Back button goes
+
+  function showRange(back) {
+    rangeReturn = back || showIntro;
+    if (!isPurchased() || FREE_ONLY || !HAS_RANGE) return renderRangeLocked();
+    return renderRange();
+  }
+
+  // The free build has no range.js, so the teaser falls back to these constants.
+  // The attribution has to appear on the locked screen too.
+  var RANGE_CREDIT_FALLBACK = {
+    text: "Resource universe curated by Arcanum Information Security",
+    url: "https://arcanum-sec.com",
+    indexUrl: "https://arcanum-sec.github.io/ai-sec-resources/",
+    note: "The selection, ordering and notes on this page are ours. The underlying directory of resources is theirs, and it is worth reading in full."
+  };
+
+  function rangeCredit() {
+    var c = (HAS_RANGE && RANGE.credit) ? RANGE.credit : RANGE_CREDIT_FALLBACK;
+    return "<div class='range-credit'>" +
+             "<p>" + esc(c.text) + " (" +
+               "<a href='" + esc(c.url) + "' target='_blank' rel='noopener'>arcanum-sec.com</a>" +
+             ").</p>" +
+             "<p>" + esc(c.note) + " " +
+               "<a href='" + esc(c.indexUrl) + "' target='_blank' rel='noopener'>Read the full index</a>." +
+             "</p>" +
+           "</div>";
+  }
+
+  // Bucket an item by its host string, for the counters and the host filter.
+  function rangeHostKind(host) {
+    var h = String(host || "").toLowerCase();
+    if (h.indexOf("bounty") !== -1) return "bounty";
+    if (h.indexOf("self-hosted") === 0) return "self";
+    return "online";
+  }
+
+  function renderRange() {
+    refreshChrome("range");
+
+    var nOnline = 0, nSelf = 0, nBounty = 0;
+    RANGE_ITEMS.forEach(function (it) {
+      var k = rangeHostKind(it.host);
+      if (k === "online") nOnline++;
+      else if (k === "self") nSelf++;
+      else nBounty++;
+    });
+
+    /* ---- header + counters ---- */
+    var html =
+      "<div class='range-head'>" +
+        "<div class='range-label'>Bonus</div>" +
+        "<h2>The Practice Range</h2>" +
+        "<p class='range-intro'>" + esc(RANGE.intro) + "</p>" +
+        "<div class='range-stats'>" +
+          statTile(RANGE_COUNT, "Resources", "cyan") +
+          statTile(RANGE.sections.length, "Stages", "violet") +
+          statTile(nOnline, "No setup", "safe") +
+          statTile(nSelf, "Self-hosted", "amber") +
+          statTile(nBounty, "Bounties", "threat") +
+        "</div>" +
+      "</div>";
+
+    /* ---- filter bar: search + one pill per stage ---- */
+    var pills = "<button type='button' class='r-pill on' data-sec='all'>All" +
+                  "<span class='n'>" + RANGE_COUNT + "</span></button>";
+    RANGE.sections.forEach(function (sec) {
+      pills += "<button type='button' class='r-pill' data-sec='" + esc(sec.id) + "'>" +
+                 esc(sec.title) + "<span class='n'>" + sec.items.length + "</span>" +
+               "</button>";
+    });
+
+    html +=
+      "<div class='range-filter' id='rangeFilter'>" +
+        "<div class='rf-search'>" +
+          "<span class='rf-icon' aria-hidden='true'>⌕</span>" +
+          "<input type='search' id='rangeSearch' autocomplete='off' spellcheck='false' " +
+            "placeholder='Search 45 resources by name, level or topic' " +
+            "aria-label='Search the Practice Range' />" +
+        "</div>" +
+        "<div class='rf-pills' id='rangePills'>" + pills + "</div>" +
+      "</div>" +
+      "<div class='r-empty' id='rangeEmpty' hidden>" +
+        "<p>Nothing matches that.</p>" +
+        "<button type='button' class='btn ghost' id='rangeClear'>Clear the filters</button>" +
+      "</div>";
+
+    /* ---- sections as card grids ---- */
+    RANGE.sections.forEach(function (sec, i) {
+      var cards = sec.items.map(function (it) {
+        // One lowercase haystack per card so search stays a cheap substring test.
+        var hay = (it.title + " " + it.level + " " + it.host + " " +
+                   (it.status || "") + " " + it.note + " " + sec.title).toLowerCase();
+        var flag = it.status
+          ? "<div class='r-foot'><span class='r-flag'>" + esc(it.status) + "</span></div>"
+          : "";
+        return "<li class='r-item" + (it.status ? " flagged" : "") + "' " +
+                    "data-sec='" + esc(sec.id) + "' data-hay=\"" + esc(hay) + "\">" +
+                 "<a class='r-title' href='" + esc(it.url) + "' target='_blank' rel='noopener'>" +
+                   "<span>" + esc(it.title) + "</span>" +
+                 "</a>" +
+                 "<div class='r-tags'>" +
+                   "<span class='r-tag level'>" + esc(it.level) + "</span>" +
+                   "<span class='r-tag host'>" + esc(it.host) + "</span>" +
+                 "</div>" +
+                 "<p class='r-note'>" + esc(it.note) + "</p>" +
+                 flag +
+               "</li>";
+      }).join("");
+
+      html +=
+        "<section class='range-sec' data-sec='" + esc(sec.id) + "'>" +
+          "<div class='rs-head'>" +
+            "<span class='rs-n'>" + (i + 1) + "</span>" +
+            "<h3>" + esc(sec.title) + "</h3>" +
+            "<span class='rs-count'><b class='shown'>" + sec.items.length + "</b> / " +
+              sec.items.length + "</span>" +
+          "</div>" +
+          "<p class='rs-intro'>" + esc(sec.intro) + "</p>" +
+          "<ul class='r-list'>" + cards + "</ul>" +
+        "</section>";
+    });
+
+    html += rangeCredit() +
+            "<button class='btn ghost full' id='rangeBack'>Back to training</button>";
+
+    screenEl.innerHTML = html;
+    wireRangeFilters();
+    $("rangeBack").onclick = function () { (rangeReturn || showIntro)(); };
+    try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+  }
+
+  function statTile(n, label, tone) {
+    return "<div class='r-stat " + tone + "'>" +
+             "<div class='v'>" + n + "</div>" +
+             "<div class='k'>" + esc(label) + "</div>" +
+           "</div>";
+  }
+
+  /* Live filtering. Search is a substring test over a prebuilt haystack; the
+     stage pills are an equality test. Sections with nothing left are hidden so
+     the page never shows an empty heading. */
+  function wireRangeFilters() {
+    var input   = $("rangeSearch");
+    var pillBox = $("rangePills");
+    var empty   = $("rangeEmpty");
+    if (!input || !pillBox) return;
+
+    var state2 = { q: "", sec: "all" };
+
+    function apply() {
+      var q = state2.q, sec = state2.sec, total = 0;
+      var sections = document.querySelectorAll(".range-sec");
+      for (var s = 0; s < sections.length; s++) {
+        var secEl = sections[s], shown = 0;
+        var items = secEl.querySelectorAll(".r-item");
+        for (var i = 0; i < items.length; i++) {
+          var el = items[i];
+          var ok = (sec === "all" || el.dataset.sec === sec) &&
+                   (!q || el.dataset.hay.indexOf(q) !== -1);
+          el.hidden = !ok;
+          if (ok) shown++;
+        }
+        secEl.hidden = shown === 0;
+        var c = secEl.querySelector(".rs-count .shown");
+        if (c) c.textContent = shown;
+        total += shown;
+      }
+      empty.hidden = total !== 0;
+    }
+
+    input.addEventListener("input", function () {
+      state2.q = input.value.trim().toLowerCase();
+      apply();
+    });
+
+    pillBox.addEventListener("click", function (e) {
+      var btn = e.target.closest ? e.target.closest(".r-pill") : null;
+      if (!btn) return;
+      var all = pillBox.querySelectorAll(".r-pill");
+      for (var i = 0; i < all.length; i++) all[i].classList.remove("on");
+      btn.classList.add("on");
+      state2.sec = btn.dataset.sec;
+      apply();
+    });
+
+    $("rangeClear").onclick = function () {
+      input.value = "";
+      state2.q = "";
+      state2.sec = "all";
+      var all = pillBox.querySelectorAll(".r-pill");
+      for (var i = 0; i < all.length; i++) all[i].classList.remove("on");
+      pillBox.querySelector("[data-sec='all']").classList.add("on");
+      apply();
+      input.focus();
+    };
+  }
+
+  function renderRangeLocked() {
+    refreshChrome("range");
+    screenEl.innerHTML =
+      "<div class='panel'>" +
+        "<span class='gate-badge'>Included with full access</span>" +
+        "<h2>The Practice Range</h2>" +
+        "<p>You can spot these attacks now. The next step is running them against " +
+          "something that is meant to break.</p>" +
+        "<p>The Practice Range is a curated route through the best free and " +
+          "self-hostable AI security labs, CTFs, tools and bug bounty programmes. " +
+          "Browser games to start, then indirect injection, RAG poisoning, agents " +
+          "and MCP, the self-hosted Docker ranges worth an afternoon, the scanners " +
+          "to point at a real system, and the programmes that pay for findings. " +
+          "No subscriptions, nothing paywalled.</p>" +
+        "<div class='covers'>" +
+          "<span class='t'>Start here</span><span class='t'>Indirect injection</span>" +
+          "<span class='t'>RAG poisoning</span><span class='t'>Agents and MCP</span>" +
+          "<span class='t'>Self-hosted ranges</span><span class='t'>Tools</span>" +
+          "<span class='t'>Bounties</span>" +
+        "</div>" +
+        "<div class='btn-stack'>" +
+          "<button class='btn full' id='rangeBuy'>Get full access for $39.90 on Gumroad</button>" +
+          "<button class='btn ghost full' id='rangeBack'>Back</button>" +
+        "</div>" +
+        rangeCredit() +
+      "</div>";
+    $("rangeBuy").onclick = function () { window.open(CONFIG.gumroadUrl, "_blank", "noopener"); };
+    $("rangeBack").onclick = function () { (rangeReturn || showIntro)(); };
   }
 
   /* ---------- certificate ---------- */
@@ -648,7 +899,15 @@
       "<div class='cert-actions'>" +
         "<button class='btn full' id='dl'>Download PNG</button>" +
         "<button class='btn ghost full' id='back'>Back</button>" +
+      "</div>" +
+      "<div class='next-step'>" +
+        "<div class='ns-label'>Next step</div>" +
+        "<p>You can spot them. Now go break real ones.</p>" +
+        "<button class='btn ghost full' id='certRange'>Open the Practice Range →</button>" +
       "</div>";
+    $("certRange").onclick = function () {
+      showRange(function () { showCertificate(tier); });
+    };
     $("dl").onclick = function () {
       var svgEl = $("certWrap").querySelector("svg");
       downloadCertificatePNG(svgEl, "the-filter-certificate.png");
@@ -681,6 +940,19 @@
   });
 
   /* ---------- boot ---------- */
+  if ($("navTraining")) {
+    $("navTraining").onclick = function () {
+      if (state.pos >= N_STEPS) renderComplete(); else renderCurrent();
+    };
+  }
+  if ($("navRange")) {
+    $("navRange").onclick = function () {
+      showRange(function () {
+        if (state.pos >= N_STEPS) renderComplete(); else renderCurrent();
+      });
+    };
+  }
+
   refreshChrome();
   showIntro();
 })();

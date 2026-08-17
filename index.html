@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
-  <meta name="description" content="The Filter AI — a training game where you play the guardrail on an AI assistant. Catch prompt injections, jailbreaks, and encoded payloads. Covers the OWASP LLM Top 10 for Applications 2025." />
-  <title>The Filter AI — AI Prompt Injection Defense Training</title>
+  <meta name="description" content="The Filter AI. A training game where you play the guardrail on an AI assistant. Catch prompt injections, jailbreaks, and encoded payloads. Covers the OWASP LLM Top 10 for Applications 2025." />
+  <title>The Filter AI · AI Prompt Injection Defense Training</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <!--
     Config lives on #app as data-* attributes (kept off inline <script> so the
     page stays CSP-compatible). To change the paid key or store link, edit the
-    two attributes below — nothing else needs to change.
+    two attributes below. Nothing else needs to change.
   -->
   <div class="app" id="app"
        data-free-only="true"
@@ -35,6 +35,12 @@
         </div>
       </div>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+      <!-- Main nav. Only shown once the paid tier is unlocked. -->
+      <nav class="topnav" id="topnav" hidden>
+        <button type="button" class="navlink" id="navTraining">Training</button>
+        <button type="button" class="navlink" id="navRange">Practice Range</button>
+      </nav>
 
       <!-- Screens render here -->
       <div id="screen"></div>
