@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Drifting node field. Purely decorative, drawn by bg.js. -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
   <!--
     Config lives on #app as data-* attributes (kept off inline <script> so the
     page stays CSP-compatible). To change the paid key or store link, edit the
@@ -48,6 +51,7 @@
   </div>
 
   <!-- Load order matters: content + certificate provide globals the engine uses -->
+  <script src="bg.js"></script>
   <script src="content.js"></script>
   <script src="certificate.js"></script>
   <script src="engine.js"></script>

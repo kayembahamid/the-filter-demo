@@ -46,57 +46,57 @@ function buildCertificateSVG(data) {
 '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="The Filter AI completion certificate, ' + rank + '">' +
   '<defs>' +
     '<linearGradient id="tfBg" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0" stop-color="#152036"/>' +
-      '<stop offset="0.55" stop-color="#0a0e15"/>' +
-      '<stop offset="1" stop-color="#0a0e15"/>' +
+      '<stop offset="0" stop-color="#0c1a17"/>' +
+      '<stop offset="0.55" stop-color="#070b0f"/>' +
+      '<stop offset="1" stop-color="#070b0f"/>' +
     '</linearGradient>' +
     '<linearGradient id="tfAccent" x1="0" y1="0" x2="1" y2="0">' +
-      '<stop offset="0" stop-color="#00c2ff"/>' +
-      '<stop offset="1" stop-color="#00e5a0"/>' +
+      '<stop offset="0" stop-color="#2ee6a8"/>' +
+      '<stop offset="1" stop-color="#39ff88"/>' +
     '</linearGradient>' +
     '<pattern id="tfGrid" width="40" height="40" patternUnits="userSpaceOnUse">' +
-      '<path d="M40 0 L0 0 0 40" fill="none" stroke="#19212f" stroke-width="1"/>' +
+      '<path d="M40 0 L0 0 0 40" fill="none" stroke="#161f27" stroke-width="1"/>' +
     '</pattern>' +
   '</defs>' +
 
   '<rect width="' + W + '" height="' + H + '" fill="url(#tfBg)"/>' +
   '<rect width="' + W + '" height="' + H + '" fill="url(#tfGrid)" opacity="0.45"/>' +
-  '<rect x="16" y="16" width="' + (W - 32) + '" height="' + (H - 32) + '" rx="18" fill="none" stroke="#2b3648" stroke-width="1.5"/>' +
+  '<rect x="16" y="16" width="' + (W - 32) + '" height="' + (H - 32) + '" rx="18" fill="none" stroke="#263340" stroke-width="1.5"/>' +
   '<rect x="16" y="16" width="' + (W - 32) + '" height="6" rx="3" fill="url(#tfAccent)"/>' +
 
   // decorative corner ticks
-  '<circle cx="60" cy="512" r="3" fill="#2b3648"/>' +
-  '<circle cx="740" cy="512" r="3" fill="#2b3648"/>' +
+  '<circle cx="60" cy="512" r="3" fill="#263340"/>' +
+  '<circle cx="740" cy="512" r="3" fill="#263340"/>' +
 
   // eyebrow
-  '<text x="' + (W / 2) + '" y="84" text-anchor="middle" font-family="' + mono + '" font-size="14" letter-spacing="4" fill="#9d7bff">THE FILTER AI · AI SECURITY TRAINING</text>' +
+  '<text x="' + (W / 2) + '" y="84" text-anchor="middle" font-family="' + mono + '" font-size="14" letter-spacing="4" fill="#b072ff">THE FILTER AI · AI SECURITY TRAINING</text>' +
 
   // title
-  '<text x="' + (W / 2) + '" y="172" text-anchor="middle" font-family="' + display + '" font-weight="700" font-size="52" fill="#eaf1fa">Prompt Injection</text>' +
-  '<text x="' + (W / 2) + '" y="228" text-anchor="middle" font-family="' + display + '" font-weight="700" font-size="52" fill="#eaf1fa">Defender</text>' +
+  '<text x="' + (W / 2) + '" y="172" text-anchor="middle" font-family="' + display + '" font-weight="700" font-size="52" fill="#e8f2ee">Prompt Injection</text>' +
+  '<text x="' + (W / 2) + '" y="228" text-anchor="middle" font-family="' + display + '" font-weight="700" font-size="52" fill="#e8f2ee">Defender</text>' +
 
   // subtitle
-  '<text x="' + (W / 2) + '" y="278" text-anchor="middle" font-family="' + body + '" font-size="17" fill="#8493a8">Completed The Filter AI · ' + levels + ' exercises of AI security training</text>' +
+  '<text x="' + (W / 2) + '" y="278" text-anchor="middle" font-family="' + body + '" font-size="17" fill="#8497a0">Completed The Filter AI · ' + levels + ' exercises of AI security training</text>' +
 
   // rank pill
-  '<rect x="' + (W / 2 - 135) + '" y="306" width="270" height="46" rx="23" fill="#121824" stroke="#00c2ff" stroke-opacity="0.5"/>' +
-  '<text x="' + (W / 2) + '" y="335" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="19" fill="#00c2ff">' + rank + '</text>' +
+  '<rect x="' + (W / 2 - 135) + '" y="306" width="270" height="46" rx="23" fill="#0f1519" stroke="#2ee6a8" stroke-opacity="0.5"/>' +
+  '<text x="' + (W / 2) + '" y="335" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="19" fill="#2ee6a8">' + rank + '</text>' +
 
   // score
-  '<text x="' + (W / 2) + '" y="398" text-anchor="middle" font-family="' + mono + '" font-size="13" letter-spacing="3" fill="#8493a8">FINAL SCORE</text>' +
-  '<text x="' + (W / 2) + '" y="440" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="38" fill="#ffb020">' + xp + ' XP</text>' +
+  '<text x="' + (W / 2) + '" y="398" text-anchor="middle" font-family="' + mono + '" font-size="13" letter-spacing="3" fill="#8497a0">FINAL SCORE</text>' +
+  '<text x="' + (W / 2) + '" y="440" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="38" fill="#ffc233">' + xp + ' XP</text>' +
 
   // three stats
-  '<text x="200" y="490" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="24" fill="#00e5a0">' + caught + '</text>' +
-  '<text x="200" y="510" text-anchor="middle" font-family="' + mono + '" font-size="10.5" letter-spacing="1.5" fill="#8493a8">THREATS CAUGHT</text>' +
-  '<text x="400" y="490" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="24" fill="#ffb020">' + falseAlarms + '</text>' +
-  '<text x="400" y="510" text-anchor="middle" font-family="' + mono + '" font-size="10.5" letter-spacing="1.5" fill="#8493a8">FALSE ALARMS</text>' +
-  '<text x="600" y="490" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="24" fill="#ff4d6d">' + breaches + '</text>' +
-  '<text x="600" y="510" text-anchor="middle" font-family="' + mono + '" font-size="10.5" letter-spacing="1.5" fill="#8493a8">BREACHES</text>' +
+  '<text x="200" y="490" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="24" fill="#39ff88">' + caught + '</text>' +
+  '<text x="200" y="510" text-anchor="middle" font-family="' + mono + '" font-size="10.5" letter-spacing="1.5" fill="#8497a0">THREATS CAUGHT</text>' +
+  '<text x="400" y="490" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="24" fill="#ffc233">' + falseAlarms + '</text>' +
+  '<text x="400" y="510" text-anchor="middle" font-family="' + mono + '" font-size="10.5" letter-spacing="1.5" fill="#8497a0">FALSE ALARMS</text>' +
+  '<text x="600" y="490" text-anchor="middle" font-family="' + mono + '" font-weight="700" font-size="24" fill="#ff3b5c">' + breaches + '</text>' +
+  '<text x="600" y="510" text-anchor="middle" font-family="' + mono + '" font-size="10.5" letter-spacing="1.5" fill="#8497a0">BREACHES</text>' +
 
   // footer
-  '<text x="40" y="' + (H - 24) + '" font-family="' + mono + '" font-size="11.5" fill="#8493a8">The Filter AI by Hamcodes · hamcodes.com</text>' +
-  '<text x="' + (W - 40) + '" y="' + (H - 24) + '" text-anchor="end" font-family="' + mono + '" font-size="11.5" fill="#8493a8">' + dateStr + '</text>' +
+  '<text x="40" y="' + (H - 24) + '" font-family="' + mono + '" font-size="11.5" fill="#8497a0">The Filter AI by Hamcodes · hamcodes.com</text>' +
+  '<text x="' + (W - 40) + '" y="' + (H - 24) + '" text-anchor="end" font-family="' + mono + '" font-size="11.5" fill="#8497a0">' + dateStr + '</text>' +
 '</svg>';
 }
 
