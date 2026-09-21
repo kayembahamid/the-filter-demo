@@ -1,0 +1,5 @@
+# https://learn.hamcodes.com/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://learn.hamcodes.com/sitemap.xml
